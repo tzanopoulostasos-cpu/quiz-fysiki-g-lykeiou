@@ -1,0 +1,452 @@
+<!DOCTYPE html>
+<html lang="el">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Στερεό Σώμα - Πλήρες Quiz με Απαντήσεις</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: linear-gradient(135deg, #f0f4f8 0%, #e2e8f0 100%);
+            font-family: 'Segoe UI', 'Roboto', 'Georgia', serif;
+            padding: 2rem 1rem;
+            color: #1a2c3e;
+        }
+
+        .container {
+            max-width: 1100px;
+            margin: 0 auto;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+
+        .header h1 {
+            font-size: 2rem;
+            background: linear-gradient(135deg, #1e3c72, #2a5298);
+            background-clip: text;
+            -webkit-background-clip: text;
+            color: transparent;
+        }
+
+        .subhead {
+            color: #2c5282;
+            border-bottom: 2px solid #cbd5e0;
+            display: inline-block;
+            padding-bottom: 0.3rem;
+        }
+
+        .instruction {
+            background: #eef2ff;
+            border-radius: 60px;
+            padding: 0.8rem 1.5rem;
+            margin-bottom: 2rem;
+            text-align: center;
+            border-left: 5px solid #1e4663;
+            border-right: 5px solid #1e4663;
+            font-weight: 500;
+            color: #1e4663;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.03);
+        }
+
+        .instruction span {
+            font-size: 1.2rem;
+            margin-right: 0.5rem;
+        }
+
+        .search-section {
+            background: white;
+            border-radius: 60px;
+            padding: 0.5rem 1rem;
+            margin-bottom: 2rem;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1rem;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .search-box {
+            flex: 2;
+            min-width: 200px;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            background: #f8fafc;
+            border-radius: 50px;
+            padding: 0.3rem 1rem;
+            border: 1px solid #e2e8f0;
+        }
+
+        .search-box input {
+            flex: 1;
+            border: none;
+            padding: 0.7rem 0;
+            font-size: 1rem;
+            background: transparent;
+            outline: none;
+        }
+
+        .filter-buttons {
+            display: flex;
+            gap: 0.7rem;
+            flex-wrap: wrap;
+        }
+
+        .filter-btn {
+            padding: 0.5rem 1.2rem;
+            border: none;
+            border-radius: 40px;
+            background: #e2e8f0;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.2s;
+            color: #1e4663;
+        }
+
+        .filter-btn.active {
+            background: #1e4663;
+            color: white;
+        }
+
+        .stats {
+            font-size: 0.85rem;
+            color: #4a6a85;
+            padding: 0.3rem 1rem;
+        }
+
+        .question-card {
+            background: white;
+            border-radius: 24px;
+            margin-bottom: 1.2rem;
+            box-shadow: 0 6px 14px rgba(0,0,0,0.05);
+            border: 1px solid #e2edf7;
+            overflow: hidden;
+            transition: box-shadow 0.2s;
+        }
+
+        .question-card:hover {
+            box-shadow: 0 10px 20px rgba(0,0,0,0.08);
+        }
+
+        .question-header {
+            padding: 1.2rem 1.5rem;
+            cursor: pointer;
+            display: flex;
+            align-items: flex-start;
+            gap: 1rem;
+            background: white;
+            transition: background 0.2s;
+        }
+
+        .question-header:hover {
+            background: #fafcff;
+        }
+
+        .q-num {
+            font-weight: 800;
+            background: #eef2ff;
+            border-radius: 30px;
+            padding: 0.2rem 1rem;
+            min-width: 70px;
+            text-align: center;
+            color: #1e4a76;
+            font-size: 0.85rem;
+        }
+
+        .q-text {
+            flex: 1;
+            font-weight: 500;
+            line-height: 1.45;
+            color: #0a2f44;
+        }
+
+        .options-area {
+            padding: 0.2rem 1.5rem 0.8rem 1.5rem;
+            background: #ffffff;
+        }
+
+        .option {
+            display: flex;
+            align-items: baseline;
+            gap: 0.8rem;
+            padding: 0.35rem 0;
+            font-size: 0.92rem;
+            color: #2d4a6e;
+        }
+
+        .opt-letter {
+            font-weight: 700;
+            min-width: 28px;
+            color: #2c6e9e;
+        }
+
+        .tf-statement {
+            padding: 0.3rem 0 0.6rem 0;
+        }
+
+        .answer-panel {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.4s ease-out;
+            background: #fafef9;
+            border-top: 1px solid transparent;
+        }
+
+        .answer-panel.open {
+            max-height: 500px;
+            border-top: 1px solid #d4e2f0;
+            padding: 1rem 1.5rem 1.5rem 1.5rem;
+        }
+
+        .answer-badge {
+            background: #1f7b5a;
+            color: white;
+            display: inline-block;
+            padding: 0.2rem 1rem;
+            border-radius: 30px;
+            font-size: 0.8rem;
+            font-weight: 700;
+            margin-bottom: 0.7rem;
+        }
+
+        .justification {
+            border-left: 4px solid #5cad8e;
+            padding-left: 1rem;
+            color: #1c4e3a;
+            line-height: 1.5;
+            font-size: 0.92rem;
+        }
+
+        .toggle-icon {
+            font-size: 1.4rem;
+            font-weight: 300;
+            color: #3e7b9e;
+            min-width: 28px;
+            text-align: center;
+            transition: transform 0.2s;
+        }
+
+        .no-results {
+            text-align: center;
+            padding: 3rem;
+            background: white;
+            border-radius: 40px;
+            color: #718096;
+        }
+
+        footer {
+            text-align: center;
+            margin-top: 2.5rem;
+            font-size: 0.75rem;
+            color: #6c86a3;
+        }
+
+        @media (max-width: 640px) {
+            .question-header, .options-area, .answer-panel.open {
+                padding-left: 1rem;
+                padding-right: 1rem;
+            }
+            .search-section {
+                flex-direction: column;
+                align-items: stretch;
+                border-radius: 28px;
+            }
+            .instruction {
+                font-size: 0.85rem;
+                padding: 0.6rem 1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <div class="header">
+        <h1>🔩 Στερεό Σώμα</h1>
+        <div class="subhead">Μεταφορική · Στροφική · Κύλιση · Ροπή · Στροφορμή · Ισορροπία</div>
+    </div>
+
+    <div class="instruction">
+        <span>📌</span> ▶ <strong>Πατήστε σε οποιαδήποτε ερώτηση</strong> για να εμφανιστεί η σωστή απάντηση μαζί με την αναλυτική δικαιολόγηση. ◀
+    </div>
+
+    <div class="search-section">
+        <div class="search-box">
+            <span>🔍</span>
+            <input type="text" id="searchInput" placeholder="Αναζήτηση σε ερωτήσεις, απαντήσεις ή δικαιολογήσεις...">
+        </div>
+        <div class="filter-buttons">
+            <button class="filter-btn active" data-filter="all">Όλες</button>
+            <button class="filter-btn" data-filter="mc">Πολλαπλής Επιλογής</button>
+            <button class="filter-btn" data-filter="tf">Σωστό/Λάθος</button>
+        </div>
+        <div class="stats" id="stats">0 ερωτήσεις</div>
+    </div>
+
+    <div id="questionsContainer"></div>
+    <footer>
+        Επιμέλεια: Χ. Κατσιλέρος · Φυσικός Ε.Κ.Π.Α. · Πατήστε σε κάθε ερώτηση για την απάντηση με δικαιολόγηση.
+    </footer>
+</div>
+
+<script>
+    // ============================================================
+    // ΠΛΗΡΕΙΣ ΕΡΩΤΗΣΕΙΣ 1-25 (Πολλαπλής Επιλογής) & 26-52 (Σ/Λ)
+    // ΑΠΟ ΤΟ ΑΡΧΕΙΟ ΣΤΕΡΕΟ
+    // ============================================================
+
+    const allQuestions = [
+        // 1-25: Πολλαπλής Επιλογής
+        { num: 1, type: "mc", text: "Ένα υλικό σημείο διαφέρει από το στερεό σώμα στο ότι:", options: ["α. Έχει μεγαλύτερη μάζα.", "β. Δεν έχει διαστάσεις και μπορεί να εκτελεί μόνο μεταφορική κίνηση.", "γ. Δεν δέχεται δυνάμεις.", "δ. Παραμορφώνεται εύκολα."], answer: "β. Δεν έχει διαστάσεις και μπορεί να εκτελεί μόνο μεταφορική κίνηση.", justification: "Το υλικό σημείο είναι ένα σώμα χωρίς διαστάσεις που εκτελεί μόνο μεταφορική κίνηση." },
+        { num: 2, type: "mc", text: "Ένα σώμα ονομάζεται «μηχανικό στερεό» όταν:", options: ["α. Είναι κατασκευασμένο από μέταλλο.", "β. Δεν παραμορφώνεται όταν του ασκούνται δυνάμεις.", "γ. Κινείται πάντα με σταθερή ταχύτητα.", "δ. Η μάζα του είναι συγκεντρωμένη σε ένα σημείο."], answer: "β. Δεν παραμορφώνεται όταν του ασκούνται δυνάμεις.", justification: "Τα υποθετικά στερεά που δεν παραμορφώνονται λέγονται μηχανικά στερεά." },
+        { num: 3, type: "mc", text: "Στη μεταφορική κίνηση ενός στερεού:", options: ["α. Το σώμα αλλάζει προσανατολισμό.", "β. Το τμήμα που συνδέει δύο τυχαία σημεία του μετατοπίζεται παράλληλα προς τον εαυτό του.", "γ. Τα σημεία του έχουν διαφορετικές ταχύτητες.", "δ. Όλα τα σημεία διαγράφουν κυκλικές τροχιές."], answer: "β. Το τμήμα που συνδέει δύο τυχαία σημεία του μετατοπίζεται παράλληλα προς τον εαυτό του.", justification: "Αυτό αποτελεί το βασικό χαρακτηριστικό της μεταφορικής κίνησης." },
+        { num: 4, type: "mc", text: "Στη στροφική κίνηση ενός στερεού γύρω από σταθερό άξονα:", options: ["α. Όλα τα σημεία του έχουν την ίδια γραμμική ταχύτητα.", "β. Τα σημεία του άξονα παραμένουν ακίνητα.", "γ. Τα σημεία διαγράφουν τυχαίες τροχιές.", "δ. Η γωνιακή ταχύτητα διαφέρει από σημείο σε σημείο."], answer: "β. Τα σημεία του άξονα παραμένουν ακίνητα.", justification: "Στη στροφική κίνηση, τα σημεία πάνω στον άξονα περιστροφής είναι ακίνητα." },
+        { num: 5, type: "mc", text: "Η σύνθετη κίνηση ενός τροχού που κυλίεται μπορεί να μελετηθεί ως:", options: ["α. Μόνο στροφική κίνηση.", "β. Επαλληλία μιας μεταφορικής και μιας στροφικής κίνησης.", "γ. Ελεύθερη πτώση.", "δ. Μόνο μεταφορική κίνηση."], answer: "β. Επαλληλία μιας μεταφορικής και μιας στροφικής κίνησης.", justification: "Η κίνηση ενός κυλιόμενου τροχού είναι σύνθεση μεταφοράς και περιστροφής." },
+        { num: 6, type: "mc", text: "Το κέντρο μάζας (cm) ενός στερεού σώματος:", options: ["α. Πρέπει υποχρεωτικά να βρίσκεται στο εσωτερικό της μάζας του.", "β. Κινείται όπως ένα υλικό σημείο αν σε αυτό ασκούνταν όλες οι δυνάμεις που ασκούνται στο σώμα.", "γ. Είναι πάντα ακίνητο.", "δ. Εκτελεί κίνηση που εξαρτάται από τη γωνιακή του ταχύτητα."], answer: "β. Κινείται όπως ένα υλικό σημείο αν σε αυτό ασκούνταν όλες οι δυνάμεις που ασκούνται στο σώμα.", justification: "Αυτός είναι ο ορισμός του κέντρου μάζας." },
+        { num: 7, type: "mc", text: "Όταν ένας τροχός κυλίεται χωρίς ολίσθηση, η ταχύτητα του σημείου επαφής με το έδαφος είναι:", options: ["α. Ίση με vcm.", "β. Ίση με μηδέν.", "γ. Διπλάσια της vcm.", "δ. 2vcm."], answer: "β. Ίση με μηδέν.", justification: "Στην κύλιση χωρίς ολίσθηση, το σημείο επαφής είναι στιγμιαία ακίνητο ως προς το έδαφος." },
+        { num: 8, type: "mc", text: "Αν σε ένα στερεό σώμα η συνισταμένη των εξωτερικών δυνάμεων είναι μηδέν (ΣF = 0), τότε το κέντρο μάζας του:", options: ["α. Επιταχύνεται.", "β. Είτε ηρεμεί είτε κινείται με σταθερή ταχύτητα.", "γ. Εκτελεί ομαλή κυκλική κίνηση.", "δ. Αλλάζει κατεύθυνση κίνησης."], answer: "β. Είτε ηρεμεί είτε κινείται με σταθερή ταχύτητα.", justification: "Το κέντρο μάζας ακολουθεί τους νόμους του Newton για το υλικό σημείο." },
+        { num: 9, type: "mc", text: "Το μέτρο της ροπής μιας δύναμης ως προς σημείο Ο είναι ίσο με το γινόμενο:", options: ["α. Μάζας επί ταχύτητα.", "β. Δύναμης επί το χρόνο.", "γ. Του μέτρου της δύναμης επί τον μοχλοβραχίονα.", "δ. Δύναμης επί μάζα."], answer: "γ. Του μέτρου της δύναμης επί τον μοχλοβραχίονα.", justification: "Η ροπή έχει μέτρο τ = F·ℓ, όπου ℓ η απόσταση του φορέα από το σημείο Ο." },
+        { num: 10, type: "mc", text: "Η ροπή μιας δύναμης είναι μηδέν όταν:", options: ["α. Η δύναμη είναι πολύ μικρή.", "β. Ο φορέας της δύναμης διέρχεται από το σημείο υπολογισμού.", "γ. Το στερεό δε στρέφεται.", "δ. Το σώμα κινείται γρήγορα."], answer: "β. Ο φορέας της δύναμης διέρχεται από το σημείο υπολογισμού.", justification: "Αν ο φορέας περνά από το σημείο, ο μοχλοβραχίονας ℓ είναι μηδέν, άρα τ = 0." },
+        { num: 11, type: "mc", text: "Ένα ζεύγος δυνάμεων αποτελείται από δύο δυνάμεις που έχουν:", options: ["α. Ίσα μέτρα, ίδιο φορέα και ίδια φορά.", "β. Ίσα μέτρα, παράλληλους φορείς και αντίθετη φορά.", "γ. Διαφορετικά μέτρα και ίδιο σημείο εφαρμογής.", "δ. Κάθετους φορείς."], answer: "β. Ίσα μέτρα, παράλληλους φορείς και αντίθετη φορά.", justification: "Αυτός είναι ο ορισμός του ζεύγους δυνάμεων." },
+        { num: 12, type: "mc", text: "Η ροπή ενός ζεύγους δυνάμεων είναι:", options: ["α. Διαφορετική ως προς κάθε σημείο.", "β. Ίση με μηδέν.", "γ. Ίδια ως προς οποιοδήποτε σημείο αναφοράς.", "δ. Ανάλογη της μάζας."], answer: "γ. Ίδια ως προς οποιοδήποτε σημείο αναφοράς.", justification: "Η ροπή ζεύγους είναι ανεξάρτητη από το σημείο ως προς το οποίο την υπολογίζουμε." },
+        { num: 13, type: "mc", text: "Για να ισορροπεί ένα στερεό σώμα, πρέπει:", options: ["α. Μόνο ΣF = 0.", "β. Μόνο Στ = 0.", "γ. Και ΣF = 0 και Στ = 0.", "δ. Να είναι υποχρεωτικά ακίνητο."], answer: "γ. Και ΣF = 0 και Στ = 0.", justification: "Απαιτούνται και οι δύο συνθήκες για την αποφυγή μεταφορικής και στροφικής επιτάχυνσης." },
+        { num: 14, type: "mc", text: "Αν ΣF = 0 αλλά Στ ≠ 0, τότε:", options: ["α. Το σώμα ισορροπεί.", "β. Το σώμα είναι ακίνητο μεταφορικά ή κινείται ομαλά και στρέφεται.", "γ. Το σώμα επιταχύνεται μεταφορικά.", "δ. Το κέντρο μάζας διαγράφει κύκλο."], answer: "β. Το σώμα είναι ακίνητο μεταφορικά ή κινείται ομαλά και στρέφεται.", justification: "Η ΣF = 0 εξασφαλίζει μη μεταβολή της μεταφορικής κατάστασης, αλλά η ροπή προκαλεί στροφή." },
+        { num: 15, type: "mc", text: "Η μονάδα μέτρησης της ροπής στο S.I. είναι:", options: ["α. N/m", "β. N·s", "γ. N·m", "δ. kg·m²"], answer: "γ. N·m", justification: "Η ροπή προκύπτει από γινόμενο δύναμης επί απόσταση." },
+        { num: 16, type: "mc", text: "Η στροφορμή υλικού σημείου μάζας m σε κυκλική κίνηση ακτίνας r με ταχύτητα v ως προς το κέντρο Ο είναι:", options: ["α. L = m·v/r", "β. L = m·v·r", "γ. L = ½·m·v²", "δ. L = F·r"], answer: "β. L = m·v·r", justification: "Η στροφορμή ως προς το κέντρο έχει μέτρο L = p·r = m·v·r." },
+        { num: 17, type: "mc", text: "Η διεύθυνση της στροφορμής υλικού σημείου σε κυκλική κίνηση είναι:", options: ["α. Παράλληλη στην v.", "β. Παράλληλη στην r.", "γ. Κάθετη στο επίπεδο της τροχιάς.", "δ. Πάντα οριζόντια."], answer: "γ. Κάθετη στο επίπεδο της τροχιάς.", justification: "Η στροφορμή είναι διάνυσμα κάθετο στο επίπεδο που ορίζουν τα r και p." },
+        { num: 18, type: "mc", text: "Η αρχή διατήρησης της στροφορμής ισχύει όταν:", options: ["α. ΣF = 0.", "β. Η συνολική εξωτερική ροπή είναι μηδέν.", "γ. Το σώμα είναι ακίνητο.", "δ. Η ταχύτητα είναι σταθερή."], answer: "β. Η συνολική εξωτερική ροπή είναι μηδέν.", justification: "Αν Στ<sub>εξ</sub> = dL/dt = 0, τότε η ολική στροφορμή παραμένει σταθερή." },
+        { num: 19, type: "mc", text: "Κατά την κίνηση πλανήτη γύρω από τον Ήλιο, η στροφορμή του διατηρείται επειδή:", options: ["α. Έχει μεγάλη μάζα.", "β. Η βαρυτική δύναμη είναι κεντρική (ροπή μηδέν).", "γ. Ο Ήλιος είναι ακίνητος.", "δ. Δεν υπάρχουν δυνάμεις."], answer: "β. Η βαρυτική δύναμη είναι κεντρική (ροπή μηδέν).", justification: "Η βαρυτική δύναμη περνά από το κέντρο του Ήλιου, άρα η ροπή της είναι μηδέν." },
+        { num: 20, type: "mc", text: "Σε κυλιόμενο τροχό ακτίνας R, η ταχύτητα του ανώτερου σημείου ως προς το έδαφος είναι:", options: ["α. v<sub>cm</sub>", "β. 2·v<sub>cm</sub>", "γ. Μηδέν.", "δ. v<sub>cm</sub>/2"], answer: "β. 2·v<sub>cm</sub>", justification: "Το ανώτερο σημείο έχει ταχύτητα v = v<sub>cm</sub> + ωR = 2v<sub>cm</sub>." },
+        { num: 21, type: "mc", text: "Το αλγεβρικό άθροισμα των ροπών ενός ζεύγους δυνάμεων F, -F που απέχουν απόσταση d είναι:", options: ["α. τ = F·d/2", "β. τ = F·d", "γ. τ = 0", "δ. τ = 2F·d"], answer: "β. τ = F·d", justification: "Το μέτρο της ροπής του ζεύγους ισούται με το γινόμενο μίας δύναμης επί την απόσταση μεταξύ τους." },
+        { num: 22, type: "mc", text: "Κατά τη στροφή πόρτας, η ροπή είναι μέγιστη όταν:", options: ["α. Σπρώχνουμε κοντά στους μεντεσέδες.", "β. Σπρώχνουμε κάθετα και μακριά από τον άξονα.", "γ. Η δύναμη είναι παράλληλη στην πόρτα.", "δ. Η δύναμη ασκείται στον άξονα."], answer: "β. Σπρώχνουμε κάθετα και μακριά από τον άξονα.", justification: "Η ροπή αυξάνεται όταν αυξάνεται ο μοχλοβραχίονας ℓ." },
+        { num: 23, type: "mc", text: "Η μονάδα στροφορμής στο S.I. είναι:", options: ["α. N·m", "β. kg·m/s", "γ. kg·m²/s", "δ. J·s²"], answer: "γ. kg·m²/s", justification: "Από L = m·v·r προκύπτει kg·(m/s)·m = kg·m²/s." },
+        { num: 24, type: "mc", text: "Στη μεταφορική κίνηση, οι τροχιές των σημείων ενός στερεού είναι:", options: ["α. Υποχρεωτικά ευθείες.", "β. Υποχρεωτικά κύκλοι.", "γ. Πανομοιότυπες.", "δ. Διαφορετικού σχήματος."], answer: "γ. Πανομοιότυπες.", justification: "Κάθε σημείο μετατοπίζεται κατά το ίδιο διάνυσμα στον ίδιο χρόνο." },
+        { num: 25, type: "mc", text: "Ένας άνθρωπος στέκεται σε οριζόντια δοκό που στηρίζεται στα δύο άκρα. Αν πλησιάσει το άκρο Α, η δύναμη στήριξης στο Α:", options: ["α. Μειώνεται.", "β. Αυξάνεται.", "γ. Παραμένει ίδια.", "δ. Μηδενίζεται."], answer: "β. Αυξάνεται.", justification: "Από ισορροπία ροπών, όσο μικραίνει ο μοχλοβραχίονας, η δύναμη αυξάνεται." },
+
+        // 26-52: Σωστό/Λάθος
+        { num: 26, type: "tf", text: "Στην ομαλή στροφική κίνηση, όλα τα σημεία έχουν την ίδια γωνιακή ταχύτητα ω.", answer: "Σωστό", justification: "Όλα τα σημεία διαγράφουν την ίδια γωνία στον ίδιο χρόνο." },
+        { num: 27, type: "tf", text: "Αν ένα σώμα κάνει μεταφορική κίνηση, η τροχιά του είναι οπωσδήποτε ευθύγραμμη.", answer: "Λάθος", justification: "Η μεταφορική κίνηση μπορεί να είναι και καμπυλόγραμμη, αρκεί να μην αλλάζει προσανατολισμό." },
+        { num: 28, type: "tf", text: "Η ροπή μιας δύναμης ως προς άξονα εξαρτάται από την απόσταση του φορέα από τον άξονα.", answer: "Σωστό", justification: "Μέτρο ροπής τ = F·ℓ, όπου ℓ ο μοχλοβραχίονας." },
+        { num: 29, type: "tf", text: "Το κέντρο μάζας ομογενούς δακτυλίου βρίσκεται στο γεωμετρικό του κέντρο, παρόλο που εκεί δεν υπάρχει ύλη.", answer: "Σωστό", justification: "Το CM είναι μαθηματικό σημείο και μπορεί να βρίσκεται εκτός της μάζας." },
+        { num: 30, type: "tf", text: "Η συνισταμένη δύναμη ενός ζεύγους δυνάμεων είναι μηδέν.", answer: "Σωστό", justification: "Αποτελείται από δύο αντίθετες δυνάμεις, F + (-F) = 0." },
+        { num: 31, type: "tf", text: "Ένα στερεό σώμα που ισορροπεί είναι υποχρεωτικά ακίνητο.", answer: "Λάθος", justification: "Μπορεί να κινείται μεταφορικά με σταθερή ταχύτητα και να στρέφεται με σταθερή ω." },
+        { num: 32, type: "tf", text: "Η στροφορμή υλικού σημείου εξαρτάται από την επιλογή του σημείου αναφοράς.", answer: "Σωστό", justification: "Η απόσταση r και ο μοχλοβραχίονας αλλάζουν ανάλογα με το σημείο." },
+        { num: 33, type: "tf", text: "Αν οι δυνάμεις είναι ομοεπίπεδες με μηδενική ροπή, η ροπή τους βρίσκεται πάνω σε αυτό το επίπεδο.", answer: "Λάθος", justification: "Η ροπή είναι πάντα κάθετη στο επίπεδο των δυνάμεων." },
+        { num: 34, type: "tf", text: "Για ισορροπία στερεού, αρκεί Στ = 0 ως προς οποιοδήποτε σημείο.", answer: "Λάθος", justification: "Πρέπει και ΣF = 0." },
+        { num: 35, type: "tf", text: "Η στροφορμή υλικού σημείου σε ευθύγραμμη ομαλή κίνηση ως προς σημείο εκτός της τροχιάς παραμένει σταθερή.", answer: "Σωστό", justification: "L = m·v·d, με m, v, d σταθερά." },
+        { num: 36, type: "tf", text: "Στην κύλιση χωρίς ολίσθηση, vcm = ω·R.", answer: "Σωστό", justification: "Αποτελεί τη συνθήκη μη ολίσθησης." },
+        { num: 37, type: "tf", text: "Αν ΣF = 0, τότε και Στ = 0.", answer: "Λάθος", justification: "Ένα ζεύγος δυνάμεων έχει ΣF = 0 αλλά Στ ≠ 0." },
+        { num: 38, type: "tf", text: "Η στροφορμή είναι διανυσματικό μέγεθος.", answer: "Σωστό", justification: "Έχει μέτρο, διεύθυνση και φορά." },
+        { num: 39, type: "tf", text: "Η ροπή δύναμης παράλληλης στον άξονα περιστροφής είναι μηδέν.", answer: "Σωστό", justification: "Η προβολή της ροπής στον άξονα είναι μηδενική." },
+        { num: 40, type: "tf", text: "Το N·m είναι η μονάδα της ροπής.", answer: "Σωστό", justification: "Προκύπτει από τον ορισμό της ροπής." },
+        { num: 41, type: "tf", text: "Ελεύθερο στερεό με μόνο ένα ζεύγος δυνάμεων εκτελεί μόνο στροφική κίνηση.", answer: "Σωστό", justification: "ΣF = 0 άρα το CM δεν επιταχύνεται, ενώ η ροπή προκαλεί περιστροφή." },
+        { num: 42, type: "tf", text: "Η αρχή διατήρησης της στροφορμής ισχύει και για συστήματα υλικών σημείων.", answer: "Σωστό", justification: "Είναι γενικός νόμος όταν Στ<sub>εξ</sub> = 0." },
+        { num: 43, type: "tf", text: "Το κέντρο μάζας ενός σώματος συμπίπτει πάντα με το γεωμετρικό του κέντρο.", answer: "Λάθος", justification: "Μόνο αν το σώμα είναι ομογενές και συμμετρικό." },
+        { num: 44, type: "tf", text: "Στη μεταφορική κίνηση, όλα τα σημεία έχουν την ίδια επιτάχυνση.", answer: "Σωστό", justification: "Οι ταχύτητές τους είναι ίσες, άρα και οι ρυθμοί μεταβολής." },
+        { num: 45, type: "tf", text: "Αν Ν-1 δυνάμεις έχουν τεμνόμενους φορείς, τότε και η Νιοστή περνά από το σημείο τομής.", answer: "Σωστό", justification: "Από Στ(σημείο τομής) = 0, η Νιοστή δεν έχει μοχλοβραχίονα." },
+        { num: 46, type: "tf", text: "Στη στροφική κίνηση, η ταχύτητα σημείου είναι ανάλογη της απόστασής του από τον άξονα.", answer: "Σωστό", justification: "v = ω·r, με ω κοινό." },
+        { num: 47, type: "tf", text: "Η στροφορμή συστήματος είναι το διανυσματικό άθροισμα των επιμέρους στροφορμών.", answer: "Σωστό", justification: "Όπως και η ορμή, η στροφορμή είναι αθροιστική." },
+        { num: 48, type: "tf", text: "Αν Στ = 0 ως προς ένα σημείο, το σώμα ισορροπεί οπωσδήποτε.", answer: "Λάθος", justification: "Πρέπει επιπλέον να ισχύει και ΣF = 0." },
+        { num: 49, type: "tf", text: "Η ροπή δύναμης ως προς άξονα είναι διάνυσμα πάνω στον άξονα.", answer: "Σωστό", justification: "Είναι κάθετη στο επίπεδο της δύναμης και της απόστασης r." },
+        { num: 50, type: "tf", text: "Δύναμη σε διεύθυνση διάφορη του επιπέδου περιστροφής, η ροπή της ισούται με τη ροπή της συνιστώσας παράλληλης στον άξονα.", answer: "Λάθος", justification: "Με τη ροπή της συνιστώσας που είναι πάνω στο επίπεδο περιστροφής." },
+        { num: 51, type: "tf", text: "Αν Ν-1 δυνάμεις είναι παράλληλες, τότε και η Νιοστή είναι παράλληλη.", answer: "Σωστό", justification: "Από ΣF<sub>x</sub> = 0, η Νιοστή δεν έχει συνιστώσα κάθετη." },
+        { num: 52, type: "tf", text: "Η Γη δέχεται μόνο έλξη από τον Ήλιο. Η διάρκεια της ημέρας θα μπορούσε να αλλάξει.", answer: "Λάθος", justification: "Η δύναμη είναι κεντρική, δεν δημιουργεί ροπή, άρα η στροφορμή και η γωνιακή ταχύτητα διατηρούνται." }
+    ];
+
+    // Render με αναζήτηση και φίλτρα
+    let currentFilter = "all";
+    let searchTerm = "";
+
+    function renderQuestions() {
+        const filtered = allQuestions.filter(q => {
+            if (currentFilter === "mc" && q.type !== "mc") return false;
+            if (currentFilter === "tf" && q.type !== "tf") return false;
+            if (searchTerm.trim() !== "") {
+                const term = searchTerm.toLowerCase();
+                const qText = q.text.toLowerCase();
+                const ans = (q.answer || "").toLowerCase();
+                const just = (q.justification || "").toLowerCase();
+                if (!qText.includes(term) && !ans.includes(term) && !just.includes(term)) return false;
+            }
+            return true;
+        });
+
+        document.getElementById("stats").innerText = `${filtered.length} / ${allQuestions.length} ερωτήσεις`;
+        const container = document.getElementById("questionsContainer");
+
+        if (filtered.length === 0) {
+            container.innerHTML = `<div class="no-results">😕 Δεν βρέθηκαν ερωτήσεις με αυτά τα κριτήρια.</div>`;
+            return;
+        }
+
+        container.innerHTML = filtered.map(q => {
+            let optionsHtml = "";
+            if (q.type === "mc" && q.options) {
+                optionsHtml = `<div class="options-area">${q.options.map(opt => `<div class="option"><span class="opt-letter">${opt.charAt(0)}.</span><span>${opt.substring(2)}</span></div>`).join('')}</div>`;
+            } else if (q.type === "tf") {
+                optionsHtml = `<div class="options-area tf-statement"><span style="opacity:0.7;">📌 Πρόταση: </span>${q.text}</div>`;
+            }
+
+            return `
+                <div class="question-card" data-id="${q.num}">
+                    <div class="question-header">
+                        <div class="q-num">${q.type === "mc" ? "✱" : "◉"} ${q.num}</div>
+                        <div class="q-text">${q.text}</div>
+                        <div class="toggle-icon">➕</div>
+                    </div>
+                    ${optionsHtml}
+                    <div class="answer-panel">
+                        <div class="answer-badge">✔️ Απάντηση: ${q.answer}</div>
+                        <div class="justification"><strong>Δικαιολόγηση:</strong> ${q.justification}</div>
+                    </div>
+                </div>
+            `;
+        }).join('');
+
+        // Event listeners για κλικ
+        document.querySelectorAll('.question-card').forEach(card => {
+            const header = card.querySelector('.question-header');
+            const panel = card.querySelector('.answer-panel');
+            const icon = card.querySelector('.toggle-icon');
+            let isOpen = false;
+            header.addEventListener('click', (e) => {
+                e.stopPropagation();
+                isOpen = !isOpen;
+                if (isOpen) {
+                    panel.classList.add('open');
+                    icon.innerHTML = '➖';
+                } else {
+                    panel.classList.remove('open');
+                    icon.innerHTML = '➕';
+                }
+            });
+        });
+    }
+
+    // Φίλτρα και αναζήτηση
+    document.querySelectorAll('.filter-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+            document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+            currentFilter = btn.getAttribute('data-filter');
+            renderQuestions();
+        });
+    });
+
+    document.getElementById('searchInput').addEventListener('input', (e) => {
+        searchTerm = e.target.value;
+        renderQuestions();
+    });
+
+    renderQuestions();
+</script>
+</body>
+</html>
